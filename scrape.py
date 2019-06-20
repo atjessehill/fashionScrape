@@ -4,19 +4,35 @@ from os.path import join
 from io import StringIO, BytesIO
 import base64
 from PIL import Image
+import re
 
 debug = True
 scrape_image_folder_path = 'C:/Users/jesse/Desktop/scrapeImages/'
 
 # https://youtu.be/2Rf01wfbQLk
-def download_img(item_name, link):
+
+
+def scrape_item_page(link):
+    link = 'https://www.mrporter.com'+link
+    page = urllib.request.urlopen(link)
+    soup = bs(page, 'html.parser')
+
+    reg = re.compile('.*product-image*.')
+    product_div = soup.find('div', attrs={'class':reg})
+    img_link = product_div.find('img').get('src')
+
+    return 'https:'+img_link
+
+
+def download_img(product_link, img_link, item_name):
 
     path = item_name+'.jpg'
     save_folder = join(scrape_image_folder_path, path)
 
-    if 'gif' not in link:
-        urllib.request.urlretrieve(link, save_folder)
+    if 'gif' in img_link:
+        img_link = scrape_item_page(product_link)
 
+    urllib.request.urlretrieve(img_link, save_folder)
 
 def scrape_page(page):
 
@@ -35,12 +51,12 @@ def scrape_page(page):
         link = item.find('a').get('href')
         img = item.find('img').get('src')
 
-        link = link.split('product/')[1]
-        link = link.split('/')
-        link = '_'.join(link)
+        name = link.split('product/')[1]
+        name = name.split('/')
+        name = '_'.join(name)
 
         img = 'https:' + img
-        download_img(link, img)
+        download_img(link, img, name)
 
 
 def crawl_pages(start_link):
@@ -89,4 +105,5 @@ def b64_handle():
     im = Image.open(BytesIO(base64.b64decode(encoded)))
     im.save('atest.png', 'PNG')
 
-# crawl_pages("test")
+crawl_pages("test")
+# scrape_item_page("test")
