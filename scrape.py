@@ -1,6 +1,9 @@
 import urllib.request
 from bs4 import BeautifulSoup as bs
 from os.path import join
+from io import StringIO, BytesIO
+import base64
+from PIL import Image
 
 debug = True
 scrape_image_folder_path = 'C:/Users/jesse/Desktop/scrapeImages/'
@@ -70,5 +73,20 @@ def crawl_pages(start_link):
 
     print(count)
 
-# scrape_page("test")
-crawl_pages("test")
+def b64_handle():
+
+
+    print("handl b64")
+
+    # img = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs='
+    # encoded = img.split(',')[1]
+
+    #'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs='
+    # decode = 'GIF89a\x01\x00\x01\x00\x80\x00\x00\xff\xff\xff\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02D\x01\x00;
+
+
+    encoded = "see above"
+    im = Image.open(BytesIO(base64.b64decode(encoded)))
+    im.save('atest.png', 'PNG')
+
+# crawl_pages("test")
