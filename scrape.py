@@ -6,7 +6,6 @@ debug = True
 scrape_image_folder_path = 'C:/Users/jesse/Desktop/scrapeImages/'
 
 
-
 # https://youtu.be/2Rf01wfbQLk
 def download_img(item_name, link):
 
@@ -15,6 +14,7 @@ def download_img(item_name, link):
 
     if 'gif' not in link:
         urllib.request.urlretrieve(link, save_folder)
+
 
 def scrape_page(page):
 
@@ -46,4 +46,28 @@ def crawl_pages(start_link):
     if debug:
         page = 'porter_test.html'
 
+    page = 'https://www.mrporter.com/en-us/mens/sale/all?pn=1&sortBy=discount'
+
+    done = False
+    count = 1
+
+    while not done:
+        page = urllib.request.urlopen(page)
+        done = True
+        soup = bs(page, 'html.parser')
+
+        links = soup.find_all('a')
+        for i in links:
+            if i.string == "Next":
+                next_page = i.get('href')
+                done = False
+                count+=1
+
+                page = 'https://www.mrporter.com'+next_page
+                print("Moving to next page", page)
+                break
+
+    print(count)
+
 # scrape_page("test")
+crawl_pages("test")
