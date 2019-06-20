@@ -5,7 +5,6 @@ from os.path import join
 debug = True
 scrape_image_folder_path = 'C:/Users/jesse/Desktop/scrapeImages/'
 
-
 # https://youtu.be/2Rf01wfbQLk
 def download_img(item_name, link):
 
@@ -18,11 +17,11 @@ def download_img(item_name, link):
 
 def scrape_page(page):
 
-    if debug:
-        page = 'porter_test.html'
+    # if debug:
+    #     page = 'porter_test.html'
 
-    soup = bs(open(page), 'html.parser')
-
+    # soup = bs(open(page), 'html.parser')
+    soup = page
     # Item contains each clothing item on the page
 
     products = soup.find_all('li', attrs={'class': "pl-products-item"})
@@ -55,6 +54,8 @@ def crawl_pages(start_link):
         page = urllib.request.urlopen(page)
         done = True
         soup = bs(page, 'html.parser')
+
+        scrape_page(soup)
 
         links = soup.find_all('a')
         for i in links:
